@@ -17,8 +17,34 @@ set (GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 add_subdirectory (glfw)
 set (EXTRA_LIBS ${EXTRA_LIBS} glfw)
 
+add_library(GLAD "glad/glad.c")
+set(EXTRA_LIBS ${EXTRA_LIBS} GLAD)
+
 # source & header
-file (GLOB SOURCES src/*.*)
+# build source group by folder name
+set(SOURCE_ROOT_PATH "${PROJECT_SOURCE_DIR}/src")
+file(
+    GLOB_RECURSE SOURCES 
+    LIST_DIRECTORIES false
+    "${SOURCE_ROOT_PATH}/*.c*"
+    "${SOURCE_ROOT_PATH}/*.h*"
+)
+
+foreach(SOURCE_NAME IN ITEMS ${SOURCES})
+    get_filename_component(SOURCE_DIR "${SOURCE_NAME}" PATH)
+    file(RELATIVE_PATH SOURCE_RELATIVE_PATH "${SOURCE_ROOT_PATH}" "${SOURCE_DIR}")
+    string(REPLACE "/" "\\" GROUP_NAME "${SOURCE_RELATIVE_PATH}")
+    if("${SOURCE_DIR}" STREQUAL "${SOURCE_ROOT_PATH}")
+        get_filename_component(FILE_EXT "${SOURCE_NAME}" EXT)
+        if("${FILE_EXT}" MATCHES "^\\.h+")
+            set(GROUP_NAME "Header Files")
+        else()
+            set(GROUP_NAME "Source Files")
+        endif()
+        
+    endif()
+    source_group("${GROUP_NAME}" FILES "${SOURCE_NAME}")
+endforeach()
 
 add_executable (${PROJECT_NAME} ${SOURCES})
 
