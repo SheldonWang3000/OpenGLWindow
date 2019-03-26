@@ -20,7 +20,7 @@ configuration:
 before_build:
   - mkdir build
   - cd build
-  - cmake ../
+  - cmake -A %PLATFORM% ../
 
 # build with MSBuild
 build:
