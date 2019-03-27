@@ -1,23 +1,12 @@
-os: osx
+os: 
+  - osx
+  - linux
 language: cpp
 compiler:
   - clang
   - gcc
-before_script:
-  - mkdir build
-  - cd build
-  - cmake ../
-script:
-  - make
-
-os: linux
 before_install:
-  - sudo apt-get install libxrandr-dev
-  - sudo apt-get install libsdl2-dev
-language: cpp
-compiler:
-  - clang
-  - gcc
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -qq libegl1-mesa-dev libgles2-mesa-dev libxrandr-dev libsdl2-dev; fi 
 before_script:
   - mkdir build
   - cd build
