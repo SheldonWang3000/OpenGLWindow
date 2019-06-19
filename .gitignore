@@ -33,3 +33,7 @@
 
 # build folder
 build
+
+# ide folder
+cmake-build-debug
+.idea
